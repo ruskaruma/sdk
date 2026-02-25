@@ -81,7 +81,7 @@ class RuntimeBackend(abc.ABC):
         Returns:
             A list of Event objects describing the job lifecycle.
         """
-        return []
+        raise NotImplementedError()
 
     @abc.abstractmethod
     def delete_job(self, name: str):
