@@ -24,7 +24,7 @@ from kubeflow.optimizer.types.optimization_types import (
     Result,
     TrialConfig,
 )
-from kubeflow.trainer.types.types import TrainJobTemplate
+from kubeflow.trainer.types.types import Event, TrainJobTemplate
 
 
 class RuntimeBackend(abc.ABC):
@@ -71,6 +71,9 @@ class RuntimeBackend(abc.ABC):
         callbacks: list[Callable[[OptimizationJob], None]] | None = None,
     ) -> OptimizationJob:
         raise NotImplementedError()
+
+    def get_job_events(self, name: str) -> list[Event]:
+        return []
 
     @abc.abstractmethod
     def delete_job(self, name: str):
