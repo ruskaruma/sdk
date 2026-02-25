@@ -72,15 +72,8 @@ class RuntimeBackend(abc.ABC):
     ) -> OptimizationJob:
         raise NotImplementedError()
 
+    @abc.abstractmethod
     def get_job_events(self, name: str) -> list[Event]:
-        """Return events associated with an optimization job.
-
-        Args:
-            name: Name of the optimization job to retrieve events for.
-
-        Returns:
-            A list of Event objects describing the job lifecycle.
-        """
         raise NotImplementedError()
 
     @abc.abstractmethod
