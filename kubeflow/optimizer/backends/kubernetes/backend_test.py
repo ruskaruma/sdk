@@ -28,10 +28,6 @@ from kubeflow.optimizer.types.search_types import Search
 from kubeflow.trainer.test.common import SUCCESS, TestCase
 from kubeflow.trainer.types.types import CustomTrainer, TrainJobTemplate
 
-# --------------------------
-# Fixtures
-# --------------------------
-
 
 @pytest.fixture
 def optimizer_backend():
@@ -55,11 +51,6 @@ def optimizer_backend():
             return_value=Mock(to_dict=Mock(return_value={}))
         )
         yield backend
-
-
-# --------------------------
-# Tests
-# --------------------------
 
 
 @pytest.mark.parametrize(

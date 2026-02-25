@@ -83,7 +83,6 @@ class KubernetesBackend(RuntimeBackend):
         if not search_space:
             raise ValueError("Search space must be set.")
 
-        # Deep copy inputs to avoid mutating the caller's objects.
         trial_template = copy.deepcopy(trial_template)
         search_space = copy.deepcopy(search_space)
 
