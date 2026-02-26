@@ -797,6 +797,9 @@ class ContainerBackend(RuntimeBackend):
                 logger.warning(f"Failed to get logs for {container['name']}: {e}")
                 yield f"Error getting logs: {e}\n"
 
+    def get_job_events(self, name: str) -> list[types.Event]:
+        return []
+
     def wait_for_job_status(
         self,
         name: str,

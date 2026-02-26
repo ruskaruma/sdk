@@ -67,8 +67,9 @@ class RuntimeBackend(abc.ABC):
     ) -> Iterator[str]:
         raise NotImplementedError()
 
+    @abc.abstractmethod
     def get_job_events(self, name: str) -> list[types.Event]:
-        return []
+        raise NotImplementedError()
 
     @abc.abstractmethod
     def wait_for_job_status(
