@@ -77,7 +77,7 @@ def optimizer_backend():
         ),
     ],
 )
-def test_optimize_does_not_mutate_inputs(optimizer_backend, test_case):
+def test_optimize(optimizer_backend, test_case):
     """Test that optimize() does not mutate the caller's input objects."""
     print("Executing test:", test_case.name)
 
