@@ -414,7 +414,7 @@ def get_trial_list_response() -> dict:
     ],
 )
 def test_optimize(kubernetes_backend, test_case):
-    """Test KubernetesBackend.optimize and Experiment CR creation."""
+    """Test KubernetesBackend.optimize with basic success path."""
     print("Executing test:", test_case.name)
     try:
         kubernetes_backend.namespace = test_case.config.get("namespace", DEFAULT_NAMESPACE)
@@ -560,7 +560,7 @@ def test_optimize_no_input_mutation(optimizer_backend, test_case):
     ],
 )
 def test_list_jobs(kubernetes_backend, test_case):
-    """Test KubernetesBackend.list_jobs returns expected OptimizationJob list."""
+    """Test KubernetesBackend.list_jobs with basic success path."""
     print("Executing test:", test_case.name)
     try:
         kubernetes_backend.namespace = test_case.config.get("namespace", DEFAULT_NAMESPACE)
@@ -605,7 +605,7 @@ def test_list_jobs(kubernetes_backend, test_case):
     ],
 )
 def test_get_job(kubernetes_backend, test_case):
-    """Test KubernetesBackend.get_job with success and error paths."""
+    """Test KubernetesBackend.get_job with basic success path."""
     print("Executing test:", test_case.name)
     try:
         job = kubernetes_backend.get_job(**test_case.config)
@@ -662,7 +662,7 @@ def test_get_job(kubernetes_backend, test_case):
     ],
 )
 def test_get_job_logs(kubernetes_backend, test_case):
-    """Test KubernetesBackend.get_job_logs for best and explicit trials."""
+    """Test KubernetesBackend.get_job_logs with basic success path."""
     print("Executing test:", test_case.name)
     try:
         if test_case.config.get("name") == "empty-trials":
@@ -707,7 +707,7 @@ def test_get_job_logs(kubernetes_backend, test_case):
     ],
 )
 def test_get_best_results(kubernetes_backend, test_case):
-    """Test KubernetesBackend.get_best_results returns optimal trial Result."""
+    """Test KubernetesBackend.get_best_results with basic success path."""
     print("Executing test:", test_case.name)
     try:
         if test_case.config.get("name") == "no-best-trial":
@@ -795,7 +795,7 @@ def test_get_best_results(kubernetes_backend, test_case):
     ],
 )
 def test_wait_for_job_status(kubernetes_backend, test_case):
-    """Test KubernetesBackend.wait_for_job_status polling and validation."""
+    """Test KubernetesBackend.wait_for_job_status with basic success path."""
     print("Executing test:", test_case.name)
 
     original_get_job = kubernetes_backend.get_job
@@ -844,7 +844,7 @@ def test_wait_for_job_status(kubernetes_backend, test_case):
     ],
 )
 def test_delete_job(kubernetes_backend, test_case):
-    """Test KubernetesBackend.delete_job removes Experiment CR."""
+    """Test KubernetesBackend.delete_job with basic success path."""
     print("Executing test:", test_case.name)
     try:
         kubernetes_backend.namespace = test_case.config.get("namespace", DEFAULT_NAMESPACE)
@@ -895,7 +895,7 @@ def test_delete_job(kubernetes_backend, test_case):
     ],
 )
 def test_get_job_events(kubernetes_backend, test_case):
-    """Test KubernetesBackend.get_job_events filters Experiment and Trial events."""
+    """Test KubernetesBackend.get_job_events with various scenarios."""
     print("Executing test:", test_case.name)
     try:
         # Override list_namespaced_event to simulate timeout on .get().
