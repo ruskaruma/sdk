@@ -209,6 +209,8 @@ class LocalProcessBackend(RuntimeBackend):
             # (adjust args if stream_logs has different signature)
             yield from _step.job.logs(follow=follow)
 
+    def get_job_events(self, name: str) -> list[types.Event]:
+        raise NotImplementedError()
 
     def wait_for_job_status(
         self,

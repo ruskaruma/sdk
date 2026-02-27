@@ -798,7 +798,7 @@ class ContainerBackend(RuntimeBackend):
                 yield f"Error getting logs: {e}\n"
 
     def get_job_events(self, name: str) -> list[types.Event]:
-        return []
+        raise NotImplementedError()
 
     def wait_for_job_status(
         self,
