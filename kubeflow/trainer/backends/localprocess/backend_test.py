@@ -16,13 +16,17 @@
 Unit tests for the LocalProcessBackend class in the Kubeflow Trainer SDK.
 """
 
+from datetime import datetime
 from unittest.mock import Mock, patch
 
 import pytest
 
 from kubeflow.trainer.backends.localprocess.backend import LocalProcessBackend
 from kubeflow.trainer.backends.localprocess.constants import LOCAL_RUNTIME_IMAGE
+from kubeflow.trainer.backends.localprocess.job import LocalJob
 from kubeflow.trainer.backends.localprocess.types import (
+    LocalBackendJobs,
+    LocalBackendStep,
     LocalProcessBackendConfig,
     LocalRuntimeTrainer,
 )
@@ -497,3 +501,79 @@ def test_name_option_sets_job_name(local_backend, mock_train_environment):
     )
 
     assert job_name == custom_name
+
+
+@pytest.mark.parametrize(
+    "test_case",
+    [
+        TestCase(
+            name="all steps complete returns Complete status",
+            expected_status=SUCCESS,
+            config={
+                "step_statuses": [constants.TRAINJOB_COMPLETE, constants.TRAINJOB_COMPLETE],
+            },
+            expected_output=constants.TRAINJOB_COMPLETE,
+        ),
+        TestCase(
+            name="any step failed returns Failed status",
+            expected_status=SUCCESS,
+            config={
+                "step_statuses": [constants.TRAINJOB_COMPLETE, constants.TRAINJOB_FAILED],
+            },
+            expected_output=constants.TRAINJOB_FAILED,
+        ),
+        TestCase(
+            name="any step running returns Running status",
+            expected_status=SUCCESS,
+            config={
+                "step_statuses": [constants.TRAINJOB_COMPLETE, constants.TRAINJOB_RUNNING],
+            },
+            expected_output=constants.TRAINJOB_RUNNING,
+        ),
+        TestCase(
+            name="any step created returns Created status",
+            expected_status=SUCCESS,
+            config={
+                "step_statuses": [constants.TRAINJOB_COMPLETE, constants.TRAINJOB_CREATED],
+            },
+            expected_output=constants.TRAINJOB_CREATED,
+        ),
+    ],
+)
+def test_get_job_status(local_backend, test_case):
+    """Test get_job() returns correct status based on step statuses."""
+    print("Executing test:", test_case.name)
+
+    job_name = "status-test-job"
+    step_statuses = test_case.config["step_statuses"]
+
+    steps = []
+    for i, status in enumerate(step_statuses):
+        mock_job = Mock(spec=LocalJob)
+        mock_job.status = status
+        mock_job.logs = Mock(return_value=iter([]))
+        steps.append(LocalBackendStep(step_name=f"step-{i}", job=mock_job))
+
+    runtime = types.Runtime(
+        name=TORCH_RUNTIME,
+        trainer=types.RuntimeTrainer(
+            trainer_type=types.TrainerType.CUSTOM_TRAINER,
+            framework="torch",
+            num_nodes=1,
+            image=LOCAL_RUNTIME_IMAGE,
+        ),
+    )
+
+    local_backend._LocalProcessBackend__local_jobs.append(
+        LocalBackendJobs(
+            name=job_name,
+            runtime=runtime,
+            created=datetime.now(),
+            steps=steps,
+        )
+    )
+
+    trainjob = local_backend.get_job(job_name)
+    assert trainjob.status == test_case.expected_output
+
+    print("test execution complete")
